@@ -7,6 +7,8 @@ var d2lCSV = process.argv[2];
 
 var courseId = '27206';
 
+var studentData = dsv.csvParse(stripBOM(fs.readFileSync(d2lCSV, 'utf8')));
+
 async function main(){
     try{
         var students = await canvas(courseId);
