@@ -16,6 +16,8 @@ function getAssignmentNames(student) {
     return assigns;
 }
 
+// EDIT THIS TO WORK CORRECTLY
+// Currently returns 100 % for all grades
 function getAssignmentGrade(grade) {
     if (grade === 'Pass' || 'pass') {
         return '100 %';
