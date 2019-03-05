@@ -19,16 +19,18 @@ function getAssignmentNames(student) {
 // EDIT THIS TO WORK CORRECTLY
 // Currently returns 100 % for all grades
 function getAssignmentGrade(grade) {
-    if (grade === 'Pass' || 'pass') {
+    if (grade.toUpperCase() === 'PASS') {
         return '100 %';
-    } else if (grade === 'Fail' || 'fail') {
+    } else if (grade.toUpperCase() === 'FAIL') {
         return '0 %';
+    } else if (grade.toUpperCase() === 'INCOMPLETE' || grade.toUpperCase() === 'NO RECORD') {
+        return '';
     } else {
         return grade;
     }
 }
 
-module.exports = function convertAll(csvData, students) {
+module.exports = function convertCanvasStudentObjs(csvData) {
 
     var assignments = getAssignmentNames(csvData[0]);
     var newCSVData = csvData.map((student, i) => {
@@ -40,16 +42,9 @@ module.exports = function convertAll(csvData, students) {
         newStudent['Student'] = student['First Name'].concat(' ', student['Last Name']);
         newStudent['Root Account'] = 'byui.instructure.com';
         assignments.forEach(assignment => {
-            newStudent[assignment.slice(0, -14)] = getAssignmentGrade(student[assignment]);
+            // newStudent[assignment.slice(0, -14)] = student[assignment];
+            newStudent[assignment.slice(0, -14)] = getAssignmentGrade(student[`${assignment}`]);
         });
-        newStudent['Current Score'] = '';
-        newStudent['Unposted Current Score'] = '';
-        newStudent['Final Score'] = '';
-        newStudent['Unposted Final Score'] = '';
-        newStudent['Current Grade'] = '';
-        newStudent['Unposted Current Grade'] = '';
-        newStudent['Final Grade'] = '';
-        newStudent['Unposted Final Grade'] = '';
 
         return newStudent;
     });
@@ -58,7 +53,7 @@ module.exports = function convertAll(csvData, students) {
         Student: 'Points Possible'
     });
 
-    console.log(newCSVData);
+    // console.log(newCSVData);
 
     return newCSVData;
 }
