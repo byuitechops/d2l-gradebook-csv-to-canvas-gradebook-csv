@@ -37,9 +37,11 @@ module.exports = function convertCanvasStudentObjs(csvData) {
         var newStudent = {};
         delete student['End-of-Line Indicator'];
 
-        newStudent['SIS User ID'] = student.OrgDefinedId.slice(1);
-        newStudent['SIS Login ID'] = student.Username.slice(1);
         newStudent['Student'] = student['First Name'].concat(' ', student['Last Name']);
+        newStudent['ID'] = '';
+        newStudent['SIS User ID'] = student.OrgDefinedId.slice(1);
+        // console.log(newStudent['SIS User ID']);
+        newStudent['SIS Login ID'] = student.Username.slice(1);
         newStudent['Root Account'] = 'byui.instructure.com';
         assignments.forEach(assignment => {
             // newStudent[assignment.slice(0, -14)] = student[assignment];
