@@ -1,4 +1,4 @@
-var d2lCSV = './csv/Early ChildhoodSpecial Education - Major_GradesExport_2019-03-04-16-55.csv';
+var d2lCSV = './csv/Secondary Education - Major_GradesExport_2019-03-04-16-55.csv';
 
 const convertCanvasStudentObjs = require('./converter.js');
 var dsv = require('d3-dsv');

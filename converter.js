@@ -19,44 +19,33 @@ function getAssignmentNames(student) {
 function letterGradeOf(grade) {
     var num = Number(grade.slice(0, -2));
     var string = '';
-    switch (num) {
-        case num >= 94:
-            string = 'A';
-            break;
-        case num < 94 && num >= 90:
-            string = 'A-';
-            break;
-        case num < 90 && num >= 87:
-            string = 'B+';
-            break;
-        case num < 87 && num >= 84:
-            string = 'B';
-            break;
-        case num < 84 && num >= 80:
-            string = 'B-';
-            break;
-        case num < 80 && num >= 77:
-            string = 'C+';
-            break;
-        case num < 77 && num >= 74:
-            string = 'C';
-            break;
-        case num < 74 && num >= 70:
-            string = 'C-';
-            break;
-        case num < 70 && num >= 67:
-            string = 'D+';
-            break;
-        case num < 67 && num >= 64:
-            string = 'D';
-            break;
-        case num < 64 && num >= 61:
-            string = 'D-';
-            break;
-        case num < 61:
-            string = 'F';
-            break;
+
+    if (num >= 94) {
+        string = 'A';
+    } else if (num < 94 && num >= 90) {
+        string = 'A-';
+    } else if (num < 90 && num >= 87) {
+        string = 'B+';
+    } else if (num < 87 && num >= 84) {
+        string = 'B';
+    } else if (num < 84 && num >= 80) {
+        string = 'B-';
+    } else if (num < 80 && num >= 77) {
+        string = 'C+';
+    } else if (num < 77 && num >= 74) {
+        string = 'C';
+    } else if (num < 74 && num >= 70) {
+        string = 'C-';
+    } else if (num < 70 && num >= 67) {
+        string = 'D+';
+    } else if (num < 67 && num >= 64) {
+        string = 'D';
+    } else if (num < 64 && num >= 61) {
+        string = 'D-';
+    } else {
+        string = 'F';
     }
+
     return string;
 }
 
