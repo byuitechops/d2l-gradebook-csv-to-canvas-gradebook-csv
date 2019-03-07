@@ -28,16 +28,16 @@ The D2L-Gradebook-CSV file can be obtained from a Brightspace Course through an 
 
 To obtain the correct Gradebook CSV file do the following:
 
-1. Login to D2L/Brightspace with an administrator account.
-2. Search for the course you would like to obtain a gradebook for and go to its homepage.
-3. Press the **'My Grades'** Tab and press **'Grades'**.
-4. Press **'Export'**.
-5. Select the following **'Export Options'**:
+1. Login to D2L/Brightspace with an administrator account. ![step1](https://github.com/byuitechops/d2l-gradebook-csv-to-canvas-gradebook-csv/blob/development/Inputs_Walkthrough/Slide1.PNG)
+2. Search for the course you would like to obtain a gradebook for and go to its homepage. ![step2](https://github.com/byuitechops/d2l-gradebook-csv-to-canvas-gradebook-csv/blob/development/Inputs_Walkthrough/Slide2.PNG)
+3. Press the **'My Grades'** Tab and press **'Grades'**. ![step3](https://github.com/byuitechops/d2l-gradebook-csv-to-canvas-gradebook-csv/blob/development/Inputs_Walkthrough/Slide3.PNG)
+4. Press **'Export'**. ![step4](https://github.com/byuitechops/d2l-gradebook-csv-to-canvas-gradebook-csv/blob/development/Inputs_Walkthrough/Slide4.PNG)
+5. Select the following **'Export Options'**: 
   - **Key Field:** Both
   - **Grade Values:** Grade Scheme
   - **User Details:** Last Name & First Name
   - **Choose Grades to Export:** (select the desired assignments you would like to export, do not include **'Groups'**, **'Subtotals'**, **'Final Calculated Grade'**, or **'Final Adjusted Grade'**)
-6. Press **'Export to CSV'**.
+6. Press **'Export to CSV'**. ![step5-6](https://github.com/byuitechops/d2l-gradebook-csv-to-canvas-gradebook-csv/blob/development/Inputs_Walkthrough/Slide5.PNG)
 
 You may then edit the variable **'var d2lCSV'** located on line 1 of **main.js** to be the file path of your CSV. 
 For naming conventions it is best to locate it in the local folder named **csv** (**.\d2l-gradebook-csv-to-canvas-gradebook-csv\csv**).
