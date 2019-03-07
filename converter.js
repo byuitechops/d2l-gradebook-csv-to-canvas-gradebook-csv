@@ -16,15 +16,61 @@ function getAssignmentNames(student) {
     return assigns;
 }
 
-// EDIT THIS TO WORK CORRECTLY
-// Currently returns 100 % for all grades
+function letterGradeOf(grade) {
+    var num = Number(grade.slice(0, -2));
+    var string = '';
+    switch (num) {
+        case num >= 94:
+            string = 'A';
+            break;
+        case num < 94 && num >= 90:
+            string = 'A-';
+            break;
+        case num < 90 && num >= 87:
+            string = 'B+';
+            break;
+        case num < 87 && num >= 84:
+            string = 'B';
+            break;
+        case num < 84 && num >= 80:
+            string = 'B-';
+            break;
+        case num < 80 && num >= 77:
+            string = 'C+';
+            break;
+        case num < 77 && num >= 74:
+            string = 'C';
+            break;
+        case num < 74 && num >= 70:
+            string = 'C-';
+            break;
+        case num < 70 && num >= 67:
+            string = 'D+';
+            break;
+        case num < 67 && num >= 64:
+            string = 'D';
+            break;
+        case num < 64 && num >= 61:
+            string = 'D-';
+            break;
+        case num < 61:
+            string = 'F';
+            break;
+    }
+    return string;
+}
+
 function getAssignmentGrade(grade) {
     if (grade.toUpperCase() === 'PASS') {
-        return '100 %';
+        return 'A';
     } else if (grade.toUpperCase() === 'FAIL') {
-        return '0 %';
+        return 'F';
+    } else if (grade.toUpperCase() === 'FAILED') {
+        return 'F';
     } else if (grade.toUpperCase() === 'INCOMPLETE' || grade.toUpperCase() === 'NO RECORD') {
         return '';
+    } else if (grade.includes('%')) {
+        return letterGradeOf(grade);
     } else {
         return grade;
     }
@@ -40,11 +86,9 @@ module.exports = function convertCanvasStudentObjs(csvData) {
         newStudent['Student'] = student['First Name'].concat(' ', student['Last Name']);
         newStudent['ID'] = '';
         newStudent['SIS User ID'] = student.OrgDefinedId.slice(1);
-        // console.log(newStudent['SIS User ID']);
         newStudent['SIS Login ID'] = student.Username.slice(1);
         newStudent['Root Account'] = 'byui.instructure.com';
         assignments.forEach(assignment => {
-            // newStudent[assignment.slice(0, -14)] = student[assignment];
             newStudent[assignment.slice(0, -14)] = getAssignmentGrade(student[`${assignment}`]);
         });
 
