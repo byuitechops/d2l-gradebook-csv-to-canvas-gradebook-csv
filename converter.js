@@ -1,6 +1,8 @@
+// set assignment names from csv data as new objects' keys
 function getAssignmentNames(student) {
     var keynames = Object.keys(student);
     var assigns = keynames.filter(key => {
+        // filter out previously read keys
         if (key !== 'OrgDefinedId' && key !== 'Username' &&
             key !== 'Last Name' && key !== 'First Name' &&
             key !== 'End-of-Line Indicator' && key !== 'Calculated Final Grade Scheme Symbol' &&
@@ -16,6 +18,7 @@ function getAssignmentNames(student) {
     return assigns;
 }
 
+// set percentages to letter grades
 function letterGradeOf(grade) {
     var num = Number(grade.slice(0, -2));
     var string = '';
@@ -49,6 +52,7 @@ function letterGradeOf(grade) {
     return string;
 }
 
+// set all csv entries to letter grades or undefined
 function getAssignmentGrade(grade) {
     if (grade.toUpperCase() === 'PASS') {
         return 'A';
@@ -67,9 +71,12 @@ function getAssignmentGrade(grade) {
 
 module.exports = function convertCanvasStudentObjs(csvData) {
 
+    // set assignment name keys
     var assignments = getAssignmentNames(csvData[0]);
+    // for each student set all keys value pairs
     var newCSVData = csvData.map((student, i) => {
         var newStudent = {};
+        // remove end of line hash symbol
         delete student['End-of-Line Indicator'];
 
         newStudent['Student'] = student['First Name'].concat(' ', student['Last Name']);
@@ -84,11 +91,10 @@ module.exports = function convertCanvasStudentObjs(csvData) {
         return newStudent;
     });
 
+    // add points possible column to csv
     newCSVData.unshift({
         Student: 'Points Possible'
     });
-
-    // console.log(newCSVData);
 
     return newCSVData;
 }
