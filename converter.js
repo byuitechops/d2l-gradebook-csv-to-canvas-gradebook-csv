@@ -18,52 +18,18 @@ function getAssignmentNames(student) {
     return assigns;
 }
 
-// set percentages to letter grades
-function letterGradeOf(grade) {
-    var num = Number(grade.slice(0, -2));
-    var string = '';
-
-    if (num >= 94) {
-        string = 'A';
-    } else if (num < 94 && num >= 90) {
-        string = 'A-';
-    } else if (num < 90 && num >= 87) {
-        string = 'B+';
-    } else if (num < 87 && num >= 84) {
-        string = 'B';
-    } else if (num < 84 && num >= 80) {
-        string = 'B-';
-    } else if (num < 80 && num >= 77) {
-        string = 'C+';
-    } else if (num < 77 && num >= 74) {
-        string = 'C';
-    } else if (num < 74 && num >= 70) {
-        string = 'C-';
-    } else if (num < 70 && num >= 67) {
-        string = 'D+';
-    } else if (num < 67 && num >= 64) {
-        string = 'D';
-    } else if (num < 64 && num >= 61) {
-        string = 'D-';
-    } else {
-        string = 'F';
-    }
-
-    return string;
-}
-
 // set all csv entries to letter grades or undefined
 function getAssignmentGrade(grade) {
     if (grade.toUpperCase() === 'PASS') {
-        return 'A';
+        return '100 %';
     } else if (grade.toUpperCase() === 'FAIL') {
-        return 'F';
+        return '0 %';
     } else if (grade.toUpperCase() === 'FAILED') {
-        return 'F';
+        return '0 %';
     } else if (grade.toUpperCase() === 'INCOMPLETE' || grade.toUpperCase() === 'NO RECORD') {
         return '';
     } else if (grade.includes('%')) {
-        return letterGradeOf(grade);
+        return grade;
     } else {
         return grade;
     }
