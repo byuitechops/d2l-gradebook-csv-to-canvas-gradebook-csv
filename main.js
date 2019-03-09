@@ -1,5 +1,5 @@
 // Location of D2L gradebook csv export you want to convert
-var d2lCSV = './csv/Secondary Education - Major_GradesExport_2019-03-04-16-55.csv';
+var d2lCSV = './csv/Elementary Education - Major_GradesExport_2019-03-04-16-56.csv';
 
 const convertCanvasStudentObjs = require('./converter.js');
 var dsv = require('d3-dsv');
