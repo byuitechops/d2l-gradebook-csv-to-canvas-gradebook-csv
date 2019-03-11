@@ -32,16 +32,40 @@ To obtain the correct Gradebook CSV file do the following:
 5. Select the following **'Export Options'**: 
   - **Key Field:** Both
   - **Grade Values:** Grade Scheme
-  - **User Details:** Last Name & First Name
+  - **User Details:** Last Name, First Name, and Email
   - **Choose Grades to Export:** (select the desired assignments you would like to export, do not include **'Groups'**, **'Subtotals'**, **'Final Calculated Grade'**, or **'Final Adjusted Grade'**)
 6. Press **'Export to CSV'**. ![step5-6](https://github.com/byuitechops/d2l-gradebook-csv-to-canvas-gradebook-csv/blob/master/walkthrough/Slide5.PNG)
 
 For naming conventions it is best to locate it in the local folder named **csv** (`./d2l-gradebook-csv-to-canvas-gradebook-csv/csv/_filename_`) and to leave the file named as it is output from D2L exports.
 
 ---
+### Filter by Student Email
+
+You may include a CSV file containing student emails to ensure your output file only includes those students' grades. Generally you will include this in the local folder **csv**, but it can be located anywhere you can specify its path.
+
+You may include any other information, but must at least have a column titled **Email**:
+```csv
+Last Name,First Name,Email
+Tryle,Alice,alicetryle@byui.edu
+Tryle,Bob,bobtryle@byui.edu
+Tryle,Charlie,charlietryle@byui.edu
+Tryle,David,davidtryle@byui.edu
+Tryle,Eugene,eugenetryle@byui.edu
+Tryle,Faith,faithtryle@byui.edu
+Tryle,Guy,guytryle@byui.edu
+Tryle,Hope,hopetryle@byui.edu
+Tryle,Ima,imatryle@byui.edu
+
+```
+
+The next section discusses how to filter by email. If you do not wish to filter by email, but include all students, you may disregard this.
+
+---
 ### Convert CSV
 
 After exporting a D2L gradebook, you may then edit the variable `var d2lCSV` located on line 2 of **main.js** to be the file path of your CSV (as mentioned above).
+If you have a **emailList.csv** to filter through your `d2LCSV`, make `const useList = true` located on line 5 of **main.js** and `var emailCSV` on line 6 to be the file path of your email list CSV.
+If you do not wish to filter by email make sure `const useList = false`.
 To create the Canvas CSV, execute:
 
 ```sh
