@@ -43,7 +43,7 @@ For naming conventions it is best to locate it in the local folder named **csv**
 
 You may include a CSV file containing student emails to ensure your output file only includes those students' grades. Generally you will include this in the local folder **csv**, but it can be located anywhere you can specify its path.
 
-You may include any other information, but must at least have a column titled **Email**:
+Your CSV may include any information, but should have correct layout like so:
 ```csv
 Last Name,First Name,Email
 Tryle,Alice,alicetryle@byui.edu
@@ -55,6 +55,21 @@ Tryle,Faith,faithtryle@byui.edu
 Tryle,Guy,guytryle@byui.edu
 Tryle,Hope,hopetryle@byui.edu
 Tryle,Ima,imatryle@byui.edu
+
+```
+
+You must at least have a column entitled **Email**:
+```csv
+Email
+alicetryle@byui.edu
+bobtryle@byui.edu
+charlietryle@byui.edu
+davidtryle@byui.edu
+eugenetryle@byui.edu
+faithtryle@byui.edu
+guytryle@byui.edu
+hopetryle@byui.edu
+imatryle@byui.edu
 
 ```
 
