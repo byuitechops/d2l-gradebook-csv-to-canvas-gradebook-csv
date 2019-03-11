@@ -49,7 +49,7 @@ module.exports = function convertCanvasStudentObjs(csvData) {
         newStudent['ID'] = '';
         newStudent['SIS User ID'] = student.OrgDefinedId.slice(1);
         newStudent['SIS Login ID'] = student.Username.slice(1);
-        newStudent['Root Account'] = 'byui.instructure.com';
+        newStudent['Section'] = '';
         assignments.forEach(assignment => {
             newStudent[assignment.slice(0, -14)] = getAssignmentGrade(student[`${assignment}`]);
         });
