@@ -25,16 +25,16 @@ $ npm i
 
 To obtain the correct Gradebook CSV file do the following:
 
-1. Login to D2L/Brightspace with an administrator account. ![step1](https://github.com/byuitechops/d2l-gradebook-csv-to-canvas-gradebook-csv/blob/development/Inputs_Walkthrough/Slide1.PNG)
-2. Search for the course you would like to obtain a gradebook for and go to its homepage. ![step2](https://github.com/byuitechops/d2l-gradebook-csv-to-canvas-gradebook-csv/blob/development/Inputs_Walkthrough/Slide2.PNG)
-3. Press the **'My Grades'** Tab and press **'Grades'**. ![step3](https://github.com/byuitechops/d2l-gradebook-csv-to-canvas-gradebook-csv/blob/development/Inputs_Walkthrough/Slide3.PNG)
-4. Press **'Export'**. ![step4](https://github.com/byuitechops/d2l-gradebook-csv-to-canvas-gradebook-csv/blob/development/Inputs_Walkthrough/Slide4.PNG)
+1. Login to D2L/Brightspace with an administrator account. ![step1](https://github.com/byuitechops/d2l-gradebook-csv-to-canvas-gradebook-csv/blob/master/walkthrough/Slide1.PNG)
+2. Search for the course you would like to obtain a gradebook for and go to its homepage. ![step2](https://github.com/byuitechops/d2l-gradebook-csv-to-canvas-gradebook-csv/blob/master/walkthrough/Slide2.PNG)
+3. Press the **'My Grades'** Tab and press **'Grades'**. ![step3](https://github.com/byuitechops/d2l-gradebook-csv-to-canvas-gradebook-csv/blob/master/walkthrough/Slide3.PNG)
+4. Press **'Export'**. ![step4](https://github.com/byuitechops/d2l-gradebook-csv-to-canvas-gradebook-csv/blob/master/walkthrough/Slide4.PNG)
 5. Select the following **'Export Options'**: 
   - **Key Field:** Both
   - **Grade Values:** Grade Scheme
   - **User Details:** Last Name & First Name
   - **Choose Grades to Export:** (select the desired assignments you would like to export, do not include **'Groups'**, **'Subtotals'**, **'Final Calculated Grade'**, or **'Final Adjusted Grade'**)
-6. Press **'Export to CSV'**. ![step5-6](https://github.com/byuitechops/d2l-gradebook-csv-to-canvas-gradebook-csv/blob/development/Inputs_Walkthrough/Slide5.PNG)
+6. Press **'Export to CSV'**. ![step5-6](https://github.com/byuitechops/d2l-gradebook-csv-to-canvas-gradebook-csv/blob/master/walkthrough/Slide5.PNG)
 
 For naming conventions it is best to locate it in the local folder named **csv** (`./d2l-gradebook-csv-to-canvas-gradebook-csv/csv/_filename_`) and to leave the file named as it is output from D2L exports.
 
@@ -60,11 +60,16 @@ To import a Gradebook CSV into Canvas do the following:
   - Press **+ People**.
   - Add user(s) by **Email Address** and input your administrator email (not the same as your student email).
   - Select **Teacher** for **Role** (a Section does not/should not need to be included).
-  - Press **Next** and follow the steps in your admin email.
+  - Press **Next**, select the user associated with that email, and follow the steps in your admin email.
+  ![step7](https://github.com/byuitechops/d2l-gradebook-csv-to-canvas-gradebook-csv/blob/master/walkthrough/Slide6.PNG)
 2. Once you have teacher level-access to the course, navigate to the **Grades** tab (https://byui.instructure.com/courses/_coursecode_/gradebook).
-3. Under the **Actions** tab, select **Import**, press **Choose File**, then **Upload Data**
+3. Under the **Actions** tab, select **Import**, press **Choose File**, then **Upload Data**.
+  - Depending on the course's format there may not be an **Actions** tab, but the **Import** button will be located near the left of the window.
+  ![step8-9](https://github.com/byuitechops/d2l-gradebook-csv-to-canvas-gradebook-csv/blob/master/walkthrough/Slide7.PNG)
 4. Most likely you will be redirected to a page with **There was some stuff I couldn't figure out with the data that you uploaded:**.
 5. Match each Canvas **Assignment in question** name to your CSV's column names. Do not fill in the **Points Possible** input; the CSV contains percentages and Canvas will calculate the grades.
   - If the CSV has grades for an assignment that is not listed under **Assignment in question**, select **A new assignment** and input **Points Possible** if known. If not known assign **Points Possible** to **10** and contact someone who may know after upload is done and they can change it to the correct grade. Canvas should correctly change it based on percentage.
-6. Once step 5 is done successfully you will be directed to a new page with the new grades. Press **Save Changes** and you're all done!
-  - Many errors on this page can be disregarded, but you may need to contact someone if something went wrong from step 5 to step 6.
+  ![step10-11](https://github.com/byuitechops/d2l-gradebook-csv-to-canvas-gradebook-csv/blob/master/walkthrough/Slide8.PNG)
+6. Once step 5 is done successfully you will be directed to a new page with the new grades. Press **Save Changes**. You will be redirected back to the **Grades** tab, if you reload this page you should see the calculated grades for each imported grade.
+  - Most errors on this page can be disregarded, but you may need to contact someone if something went wrong from step 5 to step 6.
+  ![step12](https://github.com/byuitechops/d2l-gradebook-csv-to-canvas-gradebook-csv/blob/master/walkthrough/Slide5.PNG)
