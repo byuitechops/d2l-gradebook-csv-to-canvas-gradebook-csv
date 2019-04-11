@@ -1,0 +1,25 @@
+{
+  "name": "d2l-gradebook-csv-to-canvas-gradebook-csv",
+  "version": "1.0.0",
+  "description": "Converts a D2L gradebook's output csv to a Canvas gradebook input csv",
+  "main": "csv-converter.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/byuitechops/d2l-gradebook-csv-to-canvas-gradebook-csv.git"
+  },
+  "author": "Seth Bolander",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/byuitechops/d2l-gradebook-csv-to-canvas-gradebook-csv/issues"
+  },
+  "homepage": "https://github.com/byuitechops/d2l-gradebook-csv-to-canvas-gradebook-csv#readme",
+  "dependencies": {
+    "canvas-api-wrapper": "^3.3.5",
+    "d3-dsv": "^1.1.1",
+    "fs": "0.0.1-security",
+    "strip-bom": "^3.0.0"
+  }
+}
