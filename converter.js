@@ -5,7 +5,8 @@ function getAssignmentNames(student) {
         // filter out previously read keys
         if (key !== 'OrgDefinedId' && key !== 'Username' &&
             key !== 'Last Name' && key !== 'First Name' &&
-            key !== 'End-of-Line Indicator' && key !== 'Calculated Final Grade Scheme Symbol' &&
+            key !== 'Email' && key !== 'End-of-Line Indicator' &&
+            key !== 'Calculated Final Grade Scheme Symbol' &&
             key !== 'Adjusted Final Grade Scheme Symbol') {
             return true;
         } else {
@@ -35,12 +36,11 @@ function getAssignmentGrade(grade) {
     }
 }
 
-module.exports = function convertCanvasStudentObjs(csvData) {
-
+function convertCanvasStudentObjs(csvData) {
     // set assignment name keys
     var assignments = getAssignmentNames(csvData[0]);
     // for each student set all keys value pairs
-    var newCSVData = csvData.map((student, i) => {
+    var newCSVData = csvData.map(student => {
         var newStudent = {};
         // remove end of line hash symbol
         delete student['End-of-Line Indicator'];
@@ -63,4 +63,35 @@ module.exports = function convertCanvasStudentObjs(csvData) {
     });
 
     return newCSVData;
+}
+
+function searchEmailList(csvData, emailList) {
+    var data = csvData.filter(student => {
+        var found = emailList.find(emailObj => {
+            return emailObj.Email === student.Email;
+        });
+        return found !== undefined ? true : false;
+    });
+
+    try {
+        var newCSVData = convertCanvasStudentObjs(data);
+        return newCSVData;
+    } catch (e) {
+        if (e.message === 'Cannot convert undefined or null to object') {
+            console.log('ERROR: CSV does not contain student(s) with email in emailList.csv');
+        }
+        console.log(e.message);
+    }
+}
+
+module.exports = function converter(csvData, emailList, useList) {
+    var newData;
+
+    if (!useList) {
+        newData = convertCanvasStudentObjs(csvData);
+    } else {
+        newData = searchEmailList(csvData, emailList);
+    }
+
+    return newData;
 }
