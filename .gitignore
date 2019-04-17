@@ -1,3 +1,4 @@
 node_modules/
 *.csv
-create_new_csv/
+create_new_csv/output/*.csv
+create_new_csv/*.json
