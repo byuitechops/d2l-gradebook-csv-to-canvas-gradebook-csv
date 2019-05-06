@@ -14,6 +14,8 @@ async function getGrades(course) {
 }
 
 function uploadGrades() {
+    
+}
 
 
 function publishGrades() {
