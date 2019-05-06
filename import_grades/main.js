@@ -7,7 +7,15 @@ async function getGrades(course) {
     console.dir(hi, { depth: null });
 }
 
+function uploadGrades() {
 
+}
+
+function publishGrades() {
+
+}
+
+/****************************************************/
 function input() {
 
 }
