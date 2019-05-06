@@ -13,7 +13,14 @@ async function getGrades(course) {
     console.dir(hi, { depth: null });
 }
 
+function uploadGrades() {
 
+
+function publishGrades() {
+
+}
+
+/****************************************************/
 function getInput(directoryLocation) {
     function sanitizeDirLocation (dirLocation) {
         return path.resolve(dirLocation)
