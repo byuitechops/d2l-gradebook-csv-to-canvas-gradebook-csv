@@ -1,5 +1,11 @@
+const path = require('path');
+const fs = require('fs');
 const canvas = require('canvas-api-wrapper');
+const d3 = require('d3-dsv');
 const puppeteer = require('puppeteer');
+
+let inputDir = process.argv[2];
+
 let uploadButton = "#gradebook_upload_uploaded_data";
 
 async function getGrades(course) {
@@ -8,10 +14,18 @@ async function getGrades(course) {
 }
 
 
-function input() {
-
+function getInput(directoryLocation) {
+    function sanitizeDirLocation (dirLocation) {
+        return path.resolve(dirLocation)
+    }
+    function limitToCsvs (arrayOfFiles) {
+        return arrayOfFiles.filter((file) => path.extname(file) === ".csv");
+    }
+    directoryLocation = sanitizeDirLocation(directoryLocation);
+    filesInDir = fs.readdirSync(directoryLocation);
+    let csvs = limitToCsvs(filesInDir);
 }
 
 function main() {
-
+    let listOfCsvs = getInput(inputDir);
 }
