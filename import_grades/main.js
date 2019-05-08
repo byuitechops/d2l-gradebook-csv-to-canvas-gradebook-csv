@@ -2,48 +2,64 @@ const path = require('path');
 const fs = require('fs');
 const canvas = require('canvas-api-wrapper');
 const d3 = require('d3-dsv');
-const browser = require('puppeteer-canvas-login');
+const chalk = require('chalk');
+const browser = require('puppeteer');
+const pupTools = require('./puppeteerTools.js');
 const deepSearch = require('./deepSearch.js');
 const crawl = require('./objectCrawler.js');
 
-const canvas_course_id = { early: 47544, elem: 47540, sec: 47538, test: 49482 };
-let inputDir = { early: 'output/earlychild', elem: 'output/elementary', sec: 'output/secondary', test: 'output/test' };
+const inputOpts = {
+    early: { courseId: 47544, dirLocation: 'output/earlychild' },
+    elem: { courseId: 47540, dirLocation: 'output/elementary' },
+    sec: { courseId: 47538, dirLocation: 'output/secondary' },
+    test: { courseId: 49482, dirLocation: 'output/test' },
+};
 let uploadButton = "#gradebook_upload_uploaded_data";
 
+// Ensures that a student has grades in the Gradebook already
 async function getGrades(courseId, studentData) {
     let gradeData = await canvas.get(`/api/v1/courses/${courseId}/users?enrollment_state%5B%5D=active&enrollment_state%5B%5D=invited&enrollment_type%5B%5D=student&enrollment_type%5B%5D=student_view&include%5B%5D=avatar_url&include%5B%5D=group_ids&include%5B%5D=enrollments`);
-    // console.dir(hi, { depth: null });
+    // console.dir(gradeData, { depth: null });
     let studentLocation = deepSearch(gradeData, studentData['SIS User ID'])[0].path[0];
     // console.log(studentLocation);
-    let hasNoGrade = crawl(gradeData, [studentLocation]).enrollments[0].grades.current_score === null;
-    console.log(hasNoGrade);
+    let hasGrade = crawl(gradeData, [studentLocation]).enrollments[0].grades.current_score !== null;
+    console.log(hasGrade);
 
+    return hasGrade;
+}
+
+// Imports grades through puppeteer
+async function uploadGrades(page, courseId, csvPath, options) {
+    try {
+        const elementHandle = await page.$(uploadButton);
+        await elementHandle.uploadFile(csvPath);
+
+    } catch (err) {
+        throw new Error(err.message);
+    }
     return;
 }
 
-async function uploadGrades(csvPath, options) {
-    return;
-}
-
-async function processAndVerifyGrades(courseId, csvPath) {
+// Handles the importing and verifying of a CSV
+async function processAndVerifyGrades(page, courseId, csvPath) {
     let data = d3.csvParse(fs.readFileSync(csvPath, 'utf-8'));
     // console.log(data);
-    await uploadGrades(csvPath);
-    await getGrades(courseId, data[1]);
+    await uploadGrades(page, courseId, csvPath);
+    var hasGrades = await getGrades(courseId, data[1]);
 }
 
 /****************************************************/
-function getInput(directoryLocation) {
+function getInput() {
     function sanitizeDirLocation(dirLocation) {
         return path.resolve(dirLocation)
     }
     function limitToCsvs(arrayOfFiles) {
         return arrayOfFiles.filter((file) => path.extname(file) === ".csv");
     }
-    directoryLocation = sanitizeDirLocation(directoryLocation);
+    directoryLocation = sanitizeDirLocation(inputOpts[process.argv[2]].dirLocation);
     filesInDir = fs.readdirSync(directoryLocation);
     let csvs = limitToCsvs(filesInDir).map((file) => path.resolve(directoryLocation, file))
-    let courseId = canvas_course_id[process.argv[2]];
+    let courseId = inputOpts[process.argv[2]].courseId;
     if (courseId === undefined) throw 'Not a Valid Course To Run On | Choose early, elem, sec, or test';
     // console.log(courseId);
 
@@ -64,12 +80,13 @@ function getInput(directoryLocation) {
 }
 
 async function main() {
-    let inputs = getInput(inputDir[process.argv[2]]);
+    let inputs = getInput();
     csvs = inputs.csvs;
-    // await browser.login(inputs.loginObj);
+    var page = await pupTools.login(inputs.loginObj);
+    await page.goto(`https://byui.instructure.com/courses/${inputs.courseId}/gradebook_upload/new`)
     for (let i = 0; i < csvs.length; i++) {
         // console.log(csvs[i]);
-        await processAndVerifyGrades(inputs.courseId, csvs[i]);
+        await processAndVerifyGrades(page, inputs.courseId, csvs[i]);
     }
 }
 
