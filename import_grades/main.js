@@ -3,8 +3,6 @@ const fs = require('fs');
 const canvas = require('canvas-api-wrapper');
 const d3 = require('d3-dsv');
 const chalk = require('chalk');
-const browser = require('puppeteer');
-const pupTools = require('./puppeteerTools.js');
 const deepSearch = require('./deepSearch.js');
 const crawl = require('./objectCrawler.js');
 
@@ -12,9 +10,8 @@ const inputOpts = {
     early: { courseId: 47544, dirLocation: 'output/earlychild' },
     elem: { courseId: 47540, dirLocation: 'output/elementary' },
     sec: { courseId: 47538, dirLocation: 'output/secondary' },
-    test: { courseId: 49482, dirLocation: 'output/test' },
+    test: { courseId: 49482, dirLocation: 'output/test' }
 };
-let uploadButton = "#gradebook_upload_uploaded_data";
 
 // Ensures that a student has grades in the Gradebook already
 async function getGrades(courseId, studentData) {
@@ -29,22 +26,20 @@ async function getGrades(courseId, studentData) {
 }
 
 // Imports grades through puppeteer
-async function uploadGrades(page, courseId, csvPath, options) {
-    try {
-        const elementHandle = await page.$(uploadButton);
-        await elementHandle.uploadFile(csvPath);
-
-    } catch (err) {
-        throw new Error(err.message);
-    }
-    return;
+async function uploadGrades(courseId, csvPath) {
+    return new Promise((resolve, reject) => {
+        await canvas.post(`/api/v1/courses/${courseId}/submissions/update_grades`, {
+            // grade_data[<student_id>][posted_grade]
+            // grade_data[<student_id>][assignment_id]
+        });
+    });
 }
 
 // Handles the importing and verifying of a CSV
-async function processAndVerifyGrades(page, courseId, csvPath) {
+async function processAndVerifyGrades(courseId, csvPath) {
     let data = d3.csvParse(fs.readFileSync(csvPath, 'utf-8'));
     // console.log(data);
-    await uploadGrades(page, courseId, csvPath);
+    await uploadGrades(courseId, csvPath);
     var hasGrades = await getGrades(courseId, data[1]);
 }
 
@@ -63,30 +58,15 @@ function getInput() {
     if (courseId === undefined) throw 'Not a Valid Course To Run On | Choose early, elem, sec, or test';
     // console.log(courseId);
 
-    let loginObj = {
-        userName: process.env.USERNAMENODE,
-        passWord: process.env.PASSWORD,
-        launchOptions: {
-            defaultViewport: {
-                width: 1900,
-                height: 1080
-            },
-            args: ['--start-maximized'],
-            headless: false,
-            // devtools: true
-        }
-    };
-    return { csvs, loginObj, courseId };
+    return { csvs, courseId };
 }
 
 async function main() {
     let inputs = getInput();
     csvs = inputs.csvs;
-    var page = await pupTools.login(inputs.loginObj);
-    await page.goto(`https://byui.instructure.com/courses/${inputs.courseId}/gradebook_upload/new`)
     for (let i = 0; i < csvs.length; i++) {
         // console.log(csvs[i]);
-        await processAndVerifyGrades(page, inputs.courseId, csvs[i]);
+        await processAndVerifyGrades(inputs.courseId, csvs[i]);
     }
 }
 
