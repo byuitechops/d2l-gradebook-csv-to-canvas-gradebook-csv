@@ -28,9 +28,14 @@ async function getGrades(courseId, studentData) {
 // Imports grades through puppeteer
 async function uploadGrades(courseId, csvPath) {
     return new Promise((resolve, reject) => {
-        await canvas.post(`/api/v1/courses/${courseId}/submissions/update_grades`, {
+        await canvas.post(`/api/v1/sections//assignments/:assignment_id/submissions/update_grades`, {
             // grade_data[<student_id>][posted_grade]
             // grade_data[<student_id>][assignment_id]
+            grade_data: {
+                [`sis_user_id:${studentId}`]: {
+                    posted_grade: "100%"
+                }
+            }
         });
     });
 }
