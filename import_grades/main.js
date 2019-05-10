@@ -7,10 +7,10 @@ const deepSearch = require('./deepSearch.js');
 const crawl = require('./objectCrawler.js');
 
 const inputOpts = {
-    early: { courseId: 47544, dirLocation: 'output/earlychild' },
-    elem: { courseId: 47540, dirLocation: 'output/elementary' },
-    sec: { courseId: 47538, dirLocation: 'output/secondary' },
-    test: { courseId: 49482, dirLocation: 'output/test' }
+    early: { courseId: 47544, sectionId: 44962, filePath: 'output/earlychild/Early ChildhoodSpecial Education - Major_GradesImport.csv' },
+    elem: { courseId: 47540, sectionId: 44956, filePath: 'output/elementary/Elementary Education - Major_GradesImport.csv' },
+    sec: { courseId: 47538, sectionId: 44960, filePath: 'output/secondary/Secondary Education - Major_GradesImport.csv' },
+    test: { courseId: 49482, sectionId: 38926, filePath: 'output/test/test.csv' }
 };
 
 // Ensures that a student has grades in the Gradebook already
@@ -26,53 +26,73 @@ async function getGrades(courseId, studentData) {
 }
 
 // Imports grades through puppeteer
-async function uploadGrades(courseId, csvPath) {
+async function uploadGrade(sectionId, assignmentId, studentId, grade) {
     return new Promise((resolve, reject) => {
-        await canvas.post(`/api/v1/sections//assignments/:assignment_id/submissions/update_grades`, {
-            // grade_data[<student_id>][posted_grade]
-            // grade_data[<student_id>][assignment_id]
-            grade_data: {
-                [`sis_user_id:${studentId}`]: {
-                    posted_grade: "100%"
-                }
-            }
-        });
+        // await canvas.post(`/api/v1/sections/${sectionId}/assignments/${assignmentId}/submissions/update_grades`, {
+        // grade_data[<student_id>][posted_grade]
+        // grade_data[<student_id>][assignment_id]
+        // grade_data: {
+        // [`sis_user_id:${studentId}`]: {
+        // posted_grade: grade
+        // }
+        // }
+        // });
     });
 }
 
 // Handles the importing and verifying of a CSV
-async function processAndVerifyGrades(courseId, csvPath) {
-    let data = d3.csvParse(fs.readFileSync(csvPath, 'utf-8'));
-    // console.log(data);
-    await uploadGrades(courseId, csvPath);
-    var hasGrades = await getGrades(courseId, data[1]);
+async function processAndVerifyGrades(student, courseId, sectionId, canvasAssigns) {
+    var assignments = Object.keys(student).filter(key => {
+        let found = undefined;
+        if (student[key].slice(-1) === "%") {
+            found = canvasAssigns.find(canvasAssign => {
+                return canvasAssign.name.slice(0, 49) === key.slice(0, 49);
+            });
+
+            if (found !== undefined) {
+                console.log('FOUND');
+                return true;
+            } else {
+                console.log(`${key} NOT FOUND`);
+                return false;
+            }
+        } else {
+            return false;
+        }
+    });
+    console.log(assignments)
+    // canvasAssigns.forEach(thing => console.log(thing.name));
+    // await uploadGrades(courseId, csvPath);
+    // var hasGrades = await getGrades();
 }
 
 /****************************************************/
 function getInput() {
-    function sanitizeDirLocation(dirLocation) {
-        return path.resolve(dirLocation)
+    function sanitizeDirLocation(filePath) {
+        return path.resolve(filePath)
     }
-    function limitToCsvs(arrayOfFiles) {
-        return arrayOfFiles.filter((file) => path.extname(file) === ".csv");
-    }
-    directoryLocation = sanitizeDirLocation(inputOpts[process.argv[2]].dirLocation);
-    filesInDir = fs.readdirSync(directoryLocation);
-    let csvs = limitToCsvs(filesInDir).map((file) => path.resolve(directoryLocation, file))
+    fileLocation = sanitizeDirLocation(inputOpts[process.argv[2]].filePath);
+    let csv = fs.readFileSync(fileLocation, 'utf-8');
     let courseId = inputOpts[process.argv[2]].courseId;
+    let sectionId = inputOpts[process.argv[2]].sectionId;
     if (courseId === undefined) throw 'Not a Valid Course To Run On | Choose early, elem, sec, or test';
     // console.log(courseId);
 
-    return { csvs, courseId };
+    return { csv, courseId, sectionId };
 }
 
 async function main() {
     let inputs = getInput();
-    csvs = inputs.csvs;
-    for (let i = 0; i < csvs.length; i++) {
-        // console.log(csvs[i]);
-        await processAndVerifyGrades(inputs.courseId, csvs[i]);
-    }
+    csvData = d3.csvParse(inputs.csv);
+    // console.log(csvData[0]);
+    // for (let i = 0; i < csv.length; i++) {
+    // console.log(csvs[i]);
+    // await processAndVerifyGrades(inputs.courseId, csvs[i]);
+    // }
+    var assigns = await canvas.get(`/api/v1/courses/${inputs.courseId}/assignments/`);
+    // console.log(assigns)
+    csvData.filter(student => student.Student !== 'Points Possible')
+        .forEach(student => processAndVerifyGrades(student, inputs.courseId, inputs.sectionId, assigns));
 }
 
 main();

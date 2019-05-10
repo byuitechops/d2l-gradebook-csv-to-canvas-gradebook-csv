@@ -31,15 +31,17 @@ const output = './output/secondary/Secondary Education - Major_GradesImport';
         // convert old data to new data
         var newCSVdata = convertCanvasStudentObjs(csvData, emailList, useList);
         // write file to output location
-        var i = 0;
-        var num = 0;
-        do {
-            let fileNum = `${num++}`.padStart(2, '0');
-            fs.writeFileSync(`${output}${fileNum}.csv`, dsv.csvFormat(newCSVdata.slice(i, i + 10)));
-            console.log(chalk.green(`Wrote data set ${fileNum} to ${output}${fileNum}.csv`));
-            i += 10;
+        // var i = 0;
+        // var num = 0;
+        // do {
+        //     let fileNum = `${num++}`.padStart(2, '0');
+        //     fs.writeFileSync(`${output}${fileNum}.csv`, dsv.csvFormat(newCSVdata.slice(i, i + 10)));
+        //     console.log(chalk.green(`Wrote data set ${fileNum} to ${output}${fileNum}.csv`));
+        //     i += 10;
 
-        } while (i <= newCSVdata.length);
+        // } while (i <= newCSVdata.length);
+
+        fs.writeFileSync(`${output}.csv`, dsv.csvFormat(newCSVdata));
 
     } catch (e) {
         console.log(chalk.red('ERROR:'), e.message);
