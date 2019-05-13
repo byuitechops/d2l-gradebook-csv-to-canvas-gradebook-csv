@@ -3,8 +3,7 @@ const fs = require('fs');
 const canvas = require('canvas-api-wrapper');
 const d3 = require('d3-dsv');
 const chalk = require('chalk');
-const deepSearch = require('./deepSearch.js');
-const crawl = require('./objectCrawler.js');
+const pmap = require('p-map');
 
 const inputOpts = {
     early: { courseId: 47544, sectionId: 44962, filePath: 'output/earlychild/Early ChildhoodSpecial Education - Major_GradesImport.csv' },
@@ -13,57 +12,69 @@ const inputOpts = {
     test: { courseId: 49482, sectionId: 38926, filePath: 'output/test/test.csv' }
 };
 
-// Ensures that a student has grades in the Gradebook already
-async function getGrades(courseId, studentData) {
-    let gradeData = await canvas.get(`/api/v1/courses/${courseId}/users?enrollment_state%5B%5D=active&enrollment_state%5B%5D=invited&enrollment_type%5B%5D=student&enrollment_type%5B%5D=student_view&include%5B%5D=avatar_url&include%5B%5D=group_ids&include%5B%5D=enrollments`);
-    // console.dir(gradeData, { depth: null });
-    let studentLocation = deepSearch(gradeData, studentData['SIS User ID'])[0].path[0];
-    // console.log(studentLocation);
-    let hasGrade = crawl(gradeData, [studentLocation]).enrollments[0].grades.current_score !== null;
-    console.log(hasGrade);
-
-    return hasGrade;
+// Imports grades through puppeteer
+async function uploadGrade(input, i) {
+    debugger;
+    await canvas.post(`/api/v1/sections/${input.sectionId}/assignments/${input.assignmentId}/submissions/update_grades?grade_data[sis_user_id:${input.sis_user_id}][posted_grade]="${input.grade}"`);
+    debugger;
 }
 
-// Imports grades through puppeteer
-async function uploadGrade(sectionId, assignmentId, studentId, grade) {
-    return new Promise((resolve, reject) => {
-        // await canvas.post(`/api/v1/sections/${sectionId}/assignments/${assignmentId}/submissions/update_grades`, {
-        // grade_data[<student_id>][posted_grade]
-        // grade_data[<student_id>][assignment_id]
-        // grade_data: {
-        // [`sis_user_id:${studentId}`]: {
-        // posted_grade: grade
-        // }
-        // }
-        // });
-    });
+// Ensures that a student has grades in the Gradebook already
+async function getCanvasGrades(input, i) {
+    let submissionData = await canvas.get(`/api/v1/courses/${input.courseId}/assignments/${input.assignmentId}/submissions?include[]=user`);
+    let studentSubmission = submissionData.find(submission => submission.user.sis_user_id === input.sis_user_id);
+    let hasGrade = studentSubmission.workflow_state === "graded" ? true : false;
+    input.hasGrade = hasGrade;
+
+    return input;
 }
 
 // Handles the importing and verifying of a CSV
-async function processAndVerifyGrades(student, courseId, sectionId, canvasAssigns) {
-    var assignments = Object.keys(student).filter(key => {
+async function processAndVerifyGrades(input, i) {
+    console.log(chalk.green(`${i}/${input.num} | ${input.student['SIS User ID']} | ${(i / input.num) * 100}%`));
+
+    let student = input.student;
+    let courseId = input.courseId;
+    let sectionId = input.sectionId;
+    let canvasAssigns = input.canvasAssigns;
+
+    var assignments = Object.keys(student).reduce((accum, key) => {
         let found = undefined;
+        // find all graded assignments
         if (student[key].slice(-1) === "%") {
+            // if assignment name matches a canvas assignment return
             found = canvasAssigns.find(canvasAssign => {
                 return canvasAssign.name.slice(0, 49) === key.slice(0, 49);
             });
 
             if (found !== undefined) {
-                console.log('FOUND');
-                return true;
+                // console.log('FOUND');
+                accum.push({
+                    courseId: courseId,
+                    sectionId: sectionId,
+                    assignmentId: found.id,
+                    sis_user_id: student['SIS User ID'],
+                    grade: student[key]
+                });
             } else {
-                console.log(`${key} NOT FOUND`);
-                return false;
+                // if name doesn't match log message and skip inclusion
+                console.log(`${key} NOT FOUND. PLEASE CHANGE CSV.`);
             }
-        } else {
-            return false;
         }
-    });
-    console.log(assignments)
-    // canvasAssigns.forEach(thing => console.log(thing.name));
-    // await uploadGrades(courseId, csvPath);
-    // var hasGrades = await getGrades();
+        return accum;
+    }, []);
+
+    // If there are no grades found in assignments go ahead and return out
+    if (assignments.length === 0) return;
+    // get each canvas submission to ensure the import is needed
+    var canvasGrades = await pmap(assignments, getCanvasGrades, { concurrency: 10 });
+    // filter off all the assignments that have a grade in Canvas
+    var toImport = canvasGrades.filter(assignment => assignment.hasGrade === false);
+    // if there are no grades to import go ahead and return out
+    if (toImport.length === 0) return;
+    await pmap(toImport, uploadGrade, { concurrency: 1 });
+
+    return;
 }
 
 /****************************************************/
@@ -91,8 +102,17 @@ async function main() {
     // }
     var assigns = await canvas.get(`/api/v1/courses/${inputs.courseId}/assignments/`);
     // console.log(assigns)
-    csvData.filter(student => student.Student !== 'Points Possible')
-        .forEach(student => processAndVerifyGrades(student, inputs.courseId, inputs.sectionId, assigns));
+    var gradeData = csvData.filter(student => student.Student !== 'Points Possible')
+        .map(student => {
+            return {
+                student,
+                courseId: inputs.courseId,
+                sectionId: inputs.sectionId,
+                canvasAssigns: assigns,
+                num: csvData.length
+            };
+        });
+    await pmap(gradeData, processAndVerifyGrades, { concurrency: 1 });
 }
 
 main();

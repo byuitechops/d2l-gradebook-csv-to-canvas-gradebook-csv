@@ -1,7 +1,7 @@
 // Location of D2L gradebook csv export you want to convert
 // var d2lCSV = './create_new_csv/output/Early ChildhoodSpecial Education - Major_GradesExport_2019-03-11-17-42.csv';
-// var d2lCSV = './create_new_csv/output/Elementary Education - Major_GradesExport_2019-03-11-17-42.csv';
-var d2lCSV = './create_new_csv/output/Secondary Education - Major_GradesExport_2019-03-11-17-42.csv';
+var d2lCSV = './create_new_csv/output/Elementary Education - Major_GradesExport_2019-03-11-17-42.csv';
+// var d2lCSV = './create_new_csv/output/Secondary Education - Major_GradesExport_2019-03-11-17-42.csv';
 
 // Location of Email List csv and boolean to use it or not
 const useList = false;
@@ -23,8 +23,8 @@ if (useList) {
 
 // canvas gradebook csv output file location
 // const output = './output/earlychild/Early ChildhoodSpecial Education - Major_GradesImport';
-// const output = './output/elementary/Elementary Education - Major_GradesImport';
-const output = './output/secondary/Secondary Education - Major_GradesImport';
+const output = './output/elementary/Elementary Education - Major_GradesImport';
+// const output = './output/secondary/Secondary Education - Major_GradesImport';
 
 (async function main() {
     try {
