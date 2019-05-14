@@ -18,9 +18,13 @@
   "homepage": "https://github.com/byuitechops/d2l-gradebook-csv-to-canvas-gradebook-csv#readme",
   "dependencies": {
     "canvas-api-wrapper": "^3.3.5",
+    "chalk": "^2.4.2",
     "d3-dsv": "^1.1.1",
     "fs": "0.0.1-security",
+    "p-map": "^2.1.0",
     "path": "^0.12.7",
+    "puppeteer": "^1.15.0",
+    "puppeteer-canvas-login": "git+https://github.com/byuitechops/puppeteer-canvas-login.git",
     "strip-bom": "^3.0.0"
   }
 }

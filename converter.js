@@ -22,15 +22,15 @@ function getAssignmentNames(student) {
 // set all csv entries to letter grades or undefined
 function getAssignmentGrade(grade) {
     if (grade.toUpperCase() === 'PASS') {
-        return '100 %';
+        return '100%';
     } else if (grade.toUpperCase() === 'FAIL') {
-        return '0 %';
+        return '0%';
     } else if (grade.toUpperCase() === 'FAILED') {
-        return '0 %';
+        return '0%';
     } else if (grade.toUpperCase() === 'INCOMPLETE' || grade.toUpperCase() === 'NO RECORD') {
         return '';
     } else if (grade.includes('%')) {
-        return grade;
+        return grade.replace(' ', '');
     } else {
         return grade;
     }
