@@ -78,16 +78,29 @@ The next section discusses how to filter by email. If you do not wish to filter 
 ---
 ### Convert CSV
 
-After exporting a D2L gradebook, you may then edit the variable `var d2lCSV` located on line 2 of **main.js** to be the file path of your CSV (as mentioned above).
+After exporting a D2L gradebook, you may then edit the variable `var inputOpts` located on line 2 of **main.js** to include an object like so: 
+  ```js
+  const inputOpts = {
+    test: {
+      filePath: './create_new_csv/output/My Sandbox Course_GradesExport_date.csv',
+      output: './output/test/test.csv'
+    },
+    any_keyname_you_would_like_to_use: { // this key is used to determine what filePath and output are used
+      filePath: './the/filepath/to/the/csv/that/you/just/created.csv', // this is the filepath to your CSV
+      output: './output/file/location.csv' // this is the filepath to where you want the output written to
+    }
+  };
+  ```
 If you have a **emailList.csv** to filter through your `d2LCSV`, make `const useList = true` located on line 5 of **main.js** and `var emailCSV` on line 6 to be the file path of your email list CSV.
 If you do not wish to filter by email make sure `const useList = false`.
 To create the Canvas CSV, execute:
 
 ```sh
-$ node .\\main.js
+# Use the key you created as the 3rd commandline argument
+$ node .\\main.js inputOptsKeyName
 ```
 
-Repeat this process for as many exported gradebooks you require. Your output file(s) will be located in `./d2l-gradebook-csv-to-canvas-gradebook-csv/output/` folder.
+Repeat this process for as many exported gradebooks you require. Your output file(s) will be located in the folder you listed under the `output` key on the `inputOpts` object.
 
 ---
 ### Import to Canvas
@@ -114,10 +127,39 @@ To import a Gradebook CSV into Canvas do the following:
   ![step12](https://github.com/byuitechops/d2l-gradebook-csv-to-canvas-gradebook-csv/blob/master/walkthrough/Slide5.PNG)
 
 ---
-## Create New CSV
+# Create New CSV
 As part of the original project intent, students need to be enrolled into Canvas before they have their grades input. In order to enroll the students from the Canvas GradeBook CSV into the correct sections, [this](https://github.com/byuitechops/canvas-enroll-students) repository was created. However, students without Canvas accounts (for various reasons) would create a lot of clicking while importing grades manually. To get around this the **./create_new_csv** folder contains a way to make your D2L GradeBook CSV reflect only the grades of students who are enrolled in Canvas. Running this code on your original export creates a new D2L GradeBook CSV that can be run through the converter by following the steps above. The output of this program is located in **./create_new_csv/output**.
-
 To run use:
 ```sh
 $ node .\\create_new_csv\\createNew.js
 ```
+
+---
+# Import Grades Directly to Canvas via API
+Importing grades as described in the above sections does not always work for every course all the time and Canvas does not tell you whether or not it will or will not import grades correctly. In order to import grades without manually entering them (as this project intended to do), functions included in **./import_grades/main.js** make the various API calls that import grades correctly.
+
+*NOTE*: This may be easier than importing grades via Canvas' LMS as described above and can be used just as effectively as described as above.
+
+## How to Use
+1. You should first **Convert CSV** as described above.
+2. You must then edit the variable `var inputOpts` similar to as above:
+  ```js
+  var inputOpts = {
+    test: {
+      courseId: 49482,
+      sectionId: 38926,
+      filePath: './output/test/test.csv'
+    },
+    any_keyname_you_would_like_to_use: { // this key is used to determine what CSV you will need to use
+      courseId: 12345,
+      sectionId: 23456,
+      filePath: './location/of/the/csv/you/created/earlier.csv'
+    }
+  };
+  ```
+3. Run the following:
+  ```sh
+  # Use the key you created as your third command line argument
+  $ node .\\import_grades\\main.js inputOptsKeyName
+  ```
+4. If you would like to test a few first you may comment or uncomment the line in main (around 113) that `.slice()`s your CSV before running.
