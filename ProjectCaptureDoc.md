@@ -48,6 +48,10 @@ It includes:
 - **Root Account** <_byui.instructure.com_>
 - **Assignments** <_Student's Percent Grade for Exported Assignments_>
 
+#### Output for Import_Grades
+
+The file **./import_grades/main.js** contains functions that import grades via API calls rather than using Canvas' LMS to import as described in [README.md](https://github.com/byuitechops/d2l-gradebook-csv-to-canvas-gradebook-csv/blob/master/README.md). The output for this is, therefore, directly made in the LMS and is often more effective than using the import grade button at the cost of the time taken for all the API calls.
+
 ---
 
 ### User Interface

@@ -131,6 +131,9 @@ To import a Gradebook CSV into Canvas do the following:
 As part of the original project intent, students need to be enrolled into Canvas before they have their grades input. In order to enroll the students from the Canvas GradeBook CSV into the correct sections, [this](https://github.com/byuitechops/canvas-enroll-students) repository was created. However, students without Canvas accounts (for various reasons) would create a lot of clicking while importing grades manually. To get around this the **./create_new_csv** folder contains a way to make your D2L GradeBook CSV reflect only the grades of students who are enrolled in Canvas. Running this code on your original export creates a new D2L GradeBook CSV that can be run through the converter by following the steps above. The output of this program is located in **./create_new_csv/output**.
 To run use:
 ```sh
+# Set your Canvas API Token for the canvas-api-wrapper
+$ $env:CANVAS_API_TOKEN="1234boopboopscoopitybop12345"
+
 $ node .\\create_new_csv\\createNew.js
 ```
 
@@ -159,6 +162,9 @@ Importing grades as described in the above sections does not always work for eve
   ```
 3. Run the following:
   ```sh
+  # Set your Canvas API Token for the canvas-api-wrapper
+  $ $env:CANVAS_API_TOKEN="1234boopboopscoopitybop12345"
+
   # Use the key you created as your third command line argument
   $ node .\\import_grades\\main.js inputOptsKeyName
   ```
