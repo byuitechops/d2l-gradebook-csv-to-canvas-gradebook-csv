@@ -81,7 +81,7 @@ async function processAndVerifyGrades(input, i) {
     // If there are no grades found for this student go ahead and return out
     if (assignments.length === 0) return 0;
     // get each canvas submission to ensure the import is needed
-    var canvasGrades = await pmap(assignments, getCanvasGrades, { concurrency: 1 });
+    var canvasGrades = await pmap(assignments, getCanvasGrades, { concurrency: 10 });
     // filter off all the assignments that have a grade in Canvas
     var toImport = canvasGrades.filter(assignment => assignment.hasGrade === false);
     // if there are no grades to import go ahead and return out
@@ -110,7 +110,7 @@ function getInput() {
 async function main() {
     let inputs = getInput();
     csvData = d3.csvParse(inputs.csv)
-        .slice(176);
+    // .slice(0, 10);
     // find all assignments in Canvas for the given course
     var assigns = await canvas.get(`/api/v1/courses/${inputs.courseId}/assignments/`);
     // get all students and create input objects
