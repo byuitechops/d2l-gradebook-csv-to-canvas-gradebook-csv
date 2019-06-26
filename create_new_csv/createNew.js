@@ -6,15 +6,15 @@ const dsv = require('d3-dsv'),
 /*----- Here is the location of your D2L Input CSV and a Canvas Enrollment Object via process.argv[2] -----*/
 var inputOpts = {
     early: {
-        d2lCSV: './csv/Early ChildhoodSpecial Education - Major_GradesExport_2019-03-11-17-42.csv',
+        d2lCSV: './csv/Early ChildhoodSpecial Education - Major_GradesExport_2019-06-26-16-40.csv',
         enrollments: './create_new_csv/44962-enrollments-20190516_1350.json'
     },
     elem: {
-        d2lCSV: './csv/Elementary Education - Major_GradesExport_2019-03-11-17-42.csv',
+        d2lCSV: './csv/Elementary Education - Major_GradesExport_2019-06-26-16-41.csv',
         enrollments: './create_new_csv/44956-enrollments-20190516_1349.json'
     },
     sec: {
-        d2lCSV: './csv/Secondary Education - Major_GradesExport_2019-03-11-17-42.csv',
+        d2lCSV: './csv/Secondary Education - Major_GradesExport_2019-06-26-16-41.csv',
         enrollments: './create_new_csv/44960-enrollments-20190516_1352.json'
     }
 };

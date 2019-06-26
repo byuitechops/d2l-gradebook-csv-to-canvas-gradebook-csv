@@ -5,36 +5,36 @@ function getAssignmentNames(student) {
         // filter out previously read keys
         if (key !== 'OrgDefinedId' && key !== 'Username' &&
             key !== 'Last Name' && key !== 'First Name' &&
-            key !== 'Email' && key !== 'End-of-Line Indicator' &&
-            key !== 'Calculated Final Grade Scheme Symbol' &&
-            key !== 'Adjusted Final Grade Scheme Symbol') {
+            key !== 'Email' && key !== 'End-of-Line Indicator') {
             return true;
         } else {
             return false;
         }
     }).map(key => {
-        return key;
+        let name = key.match(/.+(?=\s\<)/);
+        let maxPoints = Number(key.match(/(MaxPoints:\d+)/)[0].slice(10));
+        return { name, maxPoints, key };
     });
 
     return assigns;
 }
 
-// set all csv entries to letter grades or undefined
-function getAssignmentGrade(grade) {
-    if (grade.toUpperCase() === 'PASS') {
-        return '100%';
-    } else if (grade.toUpperCase() === 'FAIL') {
-        return '0%';
-    } else if (grade.toUpperCase() === 'FAILED') {
-        return '0%';
-    } else if (grade.toUpperCase() === 'INCOMPLETE' || grade.toUpperCase() === 'NO RECORD') {
-        return '';
-    } else if (grade.includes('%')) {
-        return grade.replace(' ', '');
-    } else {
-        return grade;
-    }
-}
+// // set all csv entries to letter grades or undefined
+// function getAssignmentGrade(grade) {
+//     if (grade.toUpperCase() === 'PASS') {
+//         return '100%';
+//     } else if (grade.toUpperCase() === 'FAIL') {
+//         return '0%';
+//     } else if (grade.toUpperCase() === 'FAILED') {
+//         return '0%';
+//     } else if (grade.toUpperCase() === 'INCOMPLETE' || grade.toUpperCase() === 'NO RECORD') {
+//         return '';
+//     } else if (grade.includes('%')) {
+//         return grade.replace(' ', '');
+//     } else {
+//         return grade;
+//     }
+// }
 
 function convertCanvasStudentObjs(csvData) {
     // set assignment name keys
@@ -51,7 +51,9 @@ function convertCanvasStudentObjs(csvData) {
         newStudent['SIS Login ID'] = student.Username.slice(1);
         newStudent['Section'] = '';
         assignments.forEach(assignment => {
-            newStudent[assignment.slice(0, -14)] = getAssignmentGrade(student[`${assignment}`]);
+            // newStudent[assignment.name] = `${(Number(student[assignment.key]) / assignment.maxPoints) * 100} %`;
+            // if (student[assignment.key] !== "") newStudent[assignment.name] = `${Math.floor((Number(student[assignment.key]) / assignment.maxPoints) * 100)} %`;
+            newStudent[assignment.name] = student[assignment.key];
         });
 
         return newStudent;

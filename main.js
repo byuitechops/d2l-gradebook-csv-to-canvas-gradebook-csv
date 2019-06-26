@@ -1,15 +1,15 @@
 // Location of D2L gradebook csv export you want to convert and output filepath
 const inputOpts = {
     early: {
-        filePath: './create_new_csv/output/Early ChildhoodSpecial Education - Major_GradesExport_2019-03-11-17-42.csv',
+        filePath: './create_new_csv/output/Early ChildhoodSpecial Education - Major_GradesExport_2019-06-26-16-40.csv',
         output: './output/earlychild/Early ChildhoodSpecial Education - Major_GradesImport'
     },
     elem: {
-        filePath: './create_new_csv/output/Elementary Education - Major_GradesExport_2019-03-11-17-42.csv',
+        filePath: './create_new_csv/output/Elementary Education - Major_GradesExport_2019-06-26-16-41.csv',
         output: './output/elementary/Elementary Education - Major_GradesImport'
     },
     sec: {
-        filePath: './create_new_csv/output/Secondary Education - Major_GradesExport_2019-03-11-17-42.csv',
+        filePath: './create_new_csv/output/Secondary Education - Major_GradesExport_2019-06-26-16-41.csv',
         output: './output/secondary/Secondary Education - Major_GradesImport'
     }
 };
