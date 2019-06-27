@@ -11,7 +11,7 @@ function getAssignmentNames(student) {
             return false;
         }
     }).map(key => {
-        let name = key.match(/.+(?=\s\<)/);
+        let name = key.match(/.+(?=\sPoints\sGrade\s\<)/);
         let maxPoints = Number(key.match(/(MaxPoints:\d+)/)[0].slice(10));
         return { name, maxPoints, key };
     });
@@ -52,8 +52,8 @@ function convertCanvasStudentObjs(csvData) {
         newStudent['Section'] = '';
         assignments.forEach(assignment => {
             // newStudent[assignment.name] = `${(Number(student[assignment.key]) / assignment.maxPoints) * 100} %`;
-            // if (student[assignment.key] !== "") newStudent[assignment.name] = `${Math.floor((Number(student[assignment.key]) / assignment.maxPoints) * 100)} %`;
-            newStudent[assignment.name] = student[assignment.key];
+            if (student[assignment.key] !== "") newStudent[assignment.name] = `${Math.floor((Number(student[assignment.key]) / assignment.maxPoints) * 100)} %`;
+            // newStudent[assignment.name] = student[assignment.key];
         });
 
         return newStudent;
